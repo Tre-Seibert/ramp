@@ -111,6 +111,10 @@ making the functionality non existent. By adding a simple htmlFor attribute the 
 
 **Actual:** The page crashes
 
+Fix:
+Updated the handling of getTransactionsByEmployee function by allowing employees without an employee ID to be passed.
+If the employee doesn't have an ID the table simply displays 5 transactions as normal.
+
 # Bug 4: Clicking on View More button not showing correct data
 
 **How to reproduce:**
