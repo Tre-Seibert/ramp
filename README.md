@@ -126,6 +126,9 @@ If the employee doesn't have an ID the table simply displays 5 transactions as n
 
 **Actual:** New transactions replace initial transactions, losing initial transactions
 
+Fix: Updated the "loadAllTransactions" function so that it does not invalidate the data from paginatedTransactions state,
+instead it keeps track and updates the state of the currentPage variable.
+
 # Bug 5: Employees filter not available during loading more data
 
 _This bug has 2 wrong behaviors that will be fixed with the same solution_
@@ -153,6 +156,10 @@ _This bug has 2 wrong behaviors that will be fixed with the same solution_
 **Expected:** The employees filter should not show "Loading employees..." after clicking **View more**, as employees are already loaded
 
 **Actual:** The employees filter shows "Loading employees..." after clicking **View more** until new transactions are loaded.
+
+Fix:
+setIsLoading(false) directly after await employeeUtils.fetchAll(), instead of after both await employeeUtils.fetchAll() and
+await paginatedTransactionsUtils.fetchAll().
 
 # Bug 6: View more button not working as expected
 

@@ -26,8 +26,7 @@ export function InputSelect<TItem>({
 
       consumerOnChange(selectedItem)
       setSelectedValue(selectedItem)
-    },
-    [consumerOnChange]
+    }, [consumerOnChange]
   )
 
   return (
