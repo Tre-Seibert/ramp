@@ -67,11 +67,12 @@ export function App() {
             if (newValue === null) {
               return
             }
-
+            
             setSelectedEmployee(newValue);
             if (newValue !== EMPTY_EMPLOYEE) {
               await loadTransactionsByEmployee(newValue.id)
             } else {
+              setSelectedEmployee(null);  // Clear selected employee
               paginatedTransactionsUtils.invalidateData();
               await paginatedTransactionsUtils.fetchAll()
             }
