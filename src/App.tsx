@@ -13,6 +13,8 @@ export function App() {
   const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+
 
   const transactions = useMemo(
     () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
@@ -30,10 +32,12 @@ export function App() {
 
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
-      paginatedTransactionsUtils.invalidateData()
-      await transactionsByEmployeeUtils.fetchById(employeeId)
+      if(selectedEmployee !== EMPTY_EMPLOYEE){
+         paginatedTransactionsUtils.invalidateData();
+         await transactionsByEmployeeUtils.fetchById(employeeId)
+      }
     },
-    [paginatedTransactionsUtils, transactionsByEmployeeUtils]
+    [paginatedTransactionsUtils, transactionsByEmployeeUtils, selectedEmployee]
   )
 
   useEffect(() => {
@@ -64,16 +68,22 @@ export function App() {
               return
             }
 
-            await loadTransactionsByEmployee(newValue.id)
+            setSelectedEmployee(newValue);
+            if (newValue !== EMPTY_EMPLOYEE) {
+              await loadTransactionsByEmployee(newValue.id)
+            } else {
+              paginatedTransactionsUtils.invalidateData();
+              await paginatedTransactionsUtils.fetchAll()
+            }
           }}
         />
 
         <div className="RampBreak--l" />
-
+        
         <div className="RampGrid">
           <Transactions transactions={transactions} />
-
-          {transactions !== null && (
+          
+          {paginatedTransactions && paginatedTransactions.nextPage !== null && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}
